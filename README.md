@@ -12,11 +12,10 @@ This is a bike journey displaying app implemented as a programming exercise.
   - I have used React with JS in my past projects.
 - PostgreSQL
   - I have used PostgreSQL in my past projects.
-- MikroORM
+- TypeORM
   - Makes it easier to interact with database and switch it to another one if needed.
   - Supports many popular databases (for example MongoDB, MySQL, PostgreSQL, SQLite).
   - I wanted to try to use ORM instead of regular SQL queries.
-- GraphQL
-  - Seems like an easier to handle REST alternative.
+- Express.js
 - Node.js
 
