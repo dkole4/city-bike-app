@@ -1,10 +1,10 @@
-CREATE TABLE station (
+CREATE TABLE IF NOT EXISTS station (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   UNIQUE(name)
 );
 
-CREATE TABLE journey (
+CREATE TABLE IF NOT EXISTS journey (
   departure_station_id BIGSERIAL NOT NULL,
   return_station_id BIGSERIAL NOT NULL,
   covered_distance INTEGER NOT NULL,
