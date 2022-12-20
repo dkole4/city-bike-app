@@ -4,7 +4,7 @@ import { Journey } from "./entity/journey";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: "db",
+    host: "db",  // "db" as the name of database container in docker-compose
     port: 5432,
     username: "postgres",
     password: "postgres",
