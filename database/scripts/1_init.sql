@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS station (
   operator TEXT,
   capacity INTEGER,
   longitude REAL,
-  latitude REAL,
-  UNIQUE(name)
+  latitude REAL
 );
 
 CREATE TABLE IF NOT EXISTS journey (
