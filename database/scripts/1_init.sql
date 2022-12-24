@@ -1,15 +1,23 @@
 CREATE TABLE IF NOT EXISTS station (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
+  address TEXT,
+  city TEXT,
+  operator TEXT,
+  capacity INTEGER,
+  longitude REAL,
+  latitude REAL,
   UNIQUE(name)
 );
 
 CREATE TABLE IF NOT EXISTS journey (
+  departure_time TIMESTAMP NOT NULL,
+  return_time TIMESTAMP NOT NULL,
   departure_station_id BIGSERIAL NOT NULL,
   return_station_id BIGSERIAL NOT NULL,
   covered_distance INTEGER NOT NULL,
   duration INTEGER NOT NULL,
-  PRIMARY KEY(departure_station_id, return_station_id),
+  PRIMARY KEY(departure_time, return_time, departure_station_id, return_station_id),
   FOREIGN KEY(departure_station_id) REFERENCES station(id),
   FOREIGN KEY(return_station_id) REFERENCES station(id)
 );
