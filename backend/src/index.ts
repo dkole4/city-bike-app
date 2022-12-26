@@ -1,45 +1,16 @@
 import "reflect-metadata";
-import express, { Request, Response } from "express";
+import express from "express";
+import multer from "multer";
+import os from "os";
+
 import { AppDataSource } from "./data-source";
-import { Station } from "./entity/station";
-import { Journey } from "./entity/journey";
-import { ROWS_PER_PAGE } from "./constants";
+import { fetchStationDetailed, fetchStationPage } from "./controllers/station.controller";
+import { importJourneyData, importStationData } from "./controllers/import.contoller";
+import { fetchJourneyPage } from "./controllers/journey.controller";
 
-
-const handleStationGet = async (_: Request, res: Response) => {
-    return res.send({ stationId: 103 });
-};
-
-const fetchStations = async (req: Request, res: Response) => {
-    const page: number = parseInt(req.params.page as string);
-
-    const stations = await AppDataSource
-        .getRepository(Station)
-        .createQueryBuilder("station")
-        .skip(ROWS_PER_PAGE * page)
-        .take(ROWS_PER_PAGE)
-        .getMany();
-
-    return res.send(stations);
-}
-
-const fetchJourneys = async (req: Request, res: Response) => {
-    const page: number = parseInt(req.params.page as string);
-
-    const journeys = await AppDataSource
-        .getRepository(Journey)
-        .createQueryBuilder("journey")
-        .skip(ROWS_PER_PAGE * page)
-        .take(ROWS_PER_PAGE)
-        .getMany();
-
-    return res.send(journeys);
-}
-
-// const importStations = (req: Request, res: Response) => {
-//     return res.sendStatus(301);
-// }
-
+// Temporary location of imported CSV files
+const filePath: string = os.tmpdir();
+const upload: multer.Multer = multer({ dest: filePath });
 
 const main = async () => {
     const app = express();
@@ -49,14 +20,20 @@ const main = async () => {
     AppDataSource.initialize()
         .catch((err) => console.log(err));
 
-    app.route("/api/station/:page")
-        .get(fetchStations);
-
-    app.route("/api/journey/:page")
-        .get(fetchJourneys);
-
     app.route("/api/station/:stationId")
-        .get(handleStationGet);
+        .get(fetchStationDetailed);
+
+    app.route("/api/stations/:page")
+        .get(fetchStationPage);
+
+    app.route("/api/journeys/:page")
+        .get(fetchJourneyPage);
+
+    app.route("/api/import/journey")
+        .post(upload.single("file"), importJourneyData);
+    
+    app.route("/api/import/station")
+        .post(upload.single("file"), importStationData);
 
     app.listen(8080, () => {
         console.log("App is listening at port 8080");
@@ -64,5 +41,5 @@ const main = async () => {
 };
 
 main().catch((err) => {
-    console.error(err)
+    console.error(err);
 });
