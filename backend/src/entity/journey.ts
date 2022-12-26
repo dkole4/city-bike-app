@@ -1,8 +1,15 @@
 import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from "typeorm";
+
 import { Station } from "./station";
 
 @Entity()
 export class Journey {
+    @PrimaryColumn({ type: "timestamp" })
+    departure_time!: Date;
+
+    @PrimaryColumn({ type: "timestamp" })
+    return_time!: Date;
+
     @PrimaryColumn()
     departure_station_id!: number;
 
