@@ -34,6 +34,8 @@ SELECT
     "Return",
     "Departure station id",
     "Return station id",
+    -- Dropping digits after decimal point, because distance
+    -- and duration are mostly integers in the datasets.
     "Covered distance (m)"::numeric::integer,
     "Duration (sec.)"::numeric::integer
 FROM journey_data
