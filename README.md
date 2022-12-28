@@ -2,6 +2,12 @@
 
 This is a bike journey displaying app implemented as a programming exercise.
 
+## Using the app
+
+To start the application, use command `docker-compose up` in the root directory.
+If you want to import data to the database, place `stations.csv` and `journeys.csv` files to the `/database/data` directory before starting the application.
+
+
 ## Chosen technologies and why they were chosen:
 - TypeScript
   - Widely used in web-development currently.

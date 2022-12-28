@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS station (
 );
 
 CREATE TABLE IF NOT EXISTS journey (
+  id BIGSERIAL PRIMARY KEY,
   departure_time TIMESTAMP NOT NULL,
   return_time TIMESTAMP NOT NULL,
   departure_station_id BIGSERIAL NOT NULL,
   return_station_id BIGSERIAL NOT NULL,
   covered_distance INTEGER NOT NULL,
   duration INTEGER NOT NULL,
-  PRIMARY KEY(departure_time, return_time, departure_station_id, return_station_id),
   FOREIGN KEY(departure_station_id) REFERENCES station(id),
   FOREIGN KEY(return_station_id) REFERENCES station(id)
 );
