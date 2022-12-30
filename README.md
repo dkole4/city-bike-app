@@ -2,13 +2,20 @@
 
 This is a bike journey displaying app implemented as a programming exercise.
 
-## Using the app
+## Configuring the app
+
+To configure the app:
+- Set environment variables `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_DB` in `docker-compose.yaml` to appropriate ones.
+- Set environment variables `DB_USERNAME`, `DB_PASSWORD` and `DB_NAME` in `/backend/.env` to chosen values.
+- Comment out or remove `ports` field of `db` container from `docker-compose.yaml` file if you don't need the database container to be externally accessible.
+
+## Starting the app
 
 To start the application, use command `docker-compose up` in the root directory.
 If you want to import data to the database, place `stations.csv` and `journeys.csv` files to the `/database/data` directory before starting the application.
 
 
-## Chosen technologies and why they were chosen:
+## Chosen technologies and why they were chosen
 - TypeScript
   - Widely used in web-development currently.
   - Makes writing code without bugs easier (compared to JS).
