@@ -6,8 +6,14 @@ import { parse, Parser } from "csv-parse";
 import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station";
 import { Journey } from "../entity/journey";
-import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER } from "../constants";
+import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER, __prod__ } from "../constants";
 
+
+/**
+ * CSV row that contains information about a journey.
+ * 
+ * @interface JourneyCSVRow
+ */
 interface JourneyCSVRow {
     departure_time: string,
     return_time: string,
@@ -19,6 +25,11 @@ interface JourneyCSVRow {
     duration: number
 };
 
+/**
+ * CSV row that contains information about a station.
+ * 
+ * @interface StationCSVRow
+ */
 interface StationCSVRow {
     fid: number,
     id: number,
@@ -35,16 +46,29 @@ interface StationCSVRow {
     latitude: number
 };
 
+/**
+ * Check whether given journey data is valid.
+ * @param {JourneyCSVRow} data CSV row containing journey data.
+ * @returns true if data is valid, false otherwise.
+ */
 const isValidJourneyRow = (data: JourneyCSVRow) => {
     return data.distance >= 10 && data.duration >= 10;
 }
 
+/**
+ * Convert distance and duration data of JourneyCSVRow to integers.
+ * @param {JourneyCSVRow} data CSV row containing journey data.
+ */
 const truncateJourneyRowNumbers = (data: JourneyCSVRow) => {
     data.distance = Math.trunc(data.distance);
     data.duration = Math.trunc(data.duration);
 }
 
-const saveJourneyRow = async (data: JourneyCSVRow) => {
+/**
+ * Save a CSV row containing journey data into the database.
+ * @param {JourneyCSVRow} data CSV row containing journey data.
+ */
+const saveJourneyRow = async (data: JourneyCSVRow): Promise<void> => {
     // Not saving journey if its distance is less than 10 meters
     // or duration is less than 10 seconds.
     if (!isValidJourneyRow(data)) return;
@@ -59,28 +83,8 @@ const saveJourneyRow = async (data: JourneyCSVRow) => {
     // the same id before saving.
     const stationRepository = AppDataSource.getRepository(Station);
 
-    // await AppDataSource
-    //     .createQueryBuilder()
-    //     .insert()
-    //     .into(Station)
-    //     .values({
-    //         id: data.departure_id,
-    //         name: data.departure_name
-    //     })
-    //     .orIgnore()
-    //     .execute();
-
-    // await AppDataSource
-    //     .createQueryBuilder()
-    //     .insert()
-    //     .into(Station)
-    //     .values({
-    //         id: data.return_id,
-    //         name: data.return_name
-    //     })
-    //     .orIgnore()
-    //     .execute();
-
+    // If journey wasn't started and ended at the same station,
+    // upsert both of them, and only one of them otherwise.
     if (data.departure_id != data.return_id) {
         await stationRepository.upsert([
             { id: data.return_id, name: data.return_name },
@@ -92,6 +96,7 @@ const saveJourneyRow = async (data: JourneyCSVRow) => {
         );
     }
 
+    // Insert journey data into the database.
     await AppDataSource
         .createQueryBuilder()
         .insert()
@@ -108,80 +113,95 @@ const saveJourneyRow = async (data: JourneyCSVRow) => {
         .execute();
 }
 
+/**
+ * Import CSV rows containing journey data into the database.
+ */
 export const importJourneyData = async (req: Request, res: Response) => {
     const file: Express.Multer.File | undefined = req.file;
 
+    // Send 400 status if CSV file not found.
     if (!file) {
-        return res.sendStatus(401);
+        return res.sendStatus(400);
     }
 
-    const fileSize: number = file.size;
     const lineReader: Parser = fs.createReadStream(file.path)
         .pipe(
             parse({
                 columns: JOURNEY_CSV_HEADER,
-                from_line: 1                 // Ignoring the header line
             })
         );
 
     for await (const record of lineReader) {
         await saveJourneyRow(record);
-        console.log("Progress: ", lineReader.info.bytes / fileSize * 100, "%");
+
+        // Show import progress if app is started in development mode.
+        if (!__prod__)
+            console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
     }
 
-    return res.sendStatus(301);
+    // Send 201 status if data was successfully saved.
+    return res.sendStatus(201);
 }
 
-
+/**
+ * Save a CSV row contating station data to the database.
+ * @param {StationCSVRow} data CSV row containing station data.
+ */
 const saveStationRow = async (data: StationCSVRow) => {
-    // Save stations if they weren't saved yet, ignore otherwise.
-    // Ignoring errors on duplicates reduces number of transactions needed
-    // to process a journey compared to counting stations with
-    // the same id before saving.
     const stationRepository = AppDataSource.getRepository(Station);
 
+    // Create a Station instance from received data.
     const station = stationRepository.create({
         id: data.id,
         name: `${data.nimi} / ${data.namn} / ${data.name}`,
-        address: (data.osoite ? `${data.osoite} / ${data.adress}` : ``),
-        city: (data.kaupunki ? `${data.kaupunki} / ${data.stad}` : ``),
+        address:
+            // Save address in all languages if it's available in finnish,
+            // leave blank otherwise.
+            (data.osoite
+                ? `${data.osoite} / ${data.adress}`
+                : ``),
+        city:
+            // Save city name in all languages if it's available in finnish,
+            // leave blank otherwise.
+            (data.kaupunki
+                ? `${data.kaupunki} / ${data.stad}`
+                : ``),
         operator: data.operator,
         capacity: data.capacity,
         longitude: data.longitude,
         latitude: data.latitude
     });
 
+    // Upsert created Station instance.
     await stationRepository.upsert(station, ["id"]);
-
-    // await AppDataSource
-    //     .createQueryBuilder()
-    //     .insert()
-    //     .into(Station)
-    //     .values(station)
-    //     .orIgnore()
-    //     .execute();
 }
 
+/**
+ * Save station data to the database.
+ */
 export const importStationData = async (req: Request, res: Response) => {
     const file: Express.Multer.File | undefined = req.file;
 
+    // Send 400 status if CSV file not found.
     if (!file) {
-        return res.sendStatus(401);
+        return res.sendStatus(400);
     }
 
-    const fileSize: number = file.size;
     const lineReader: Parser = fs.createReadStream(file.path)
         .pipe(
             parse({
                 columns: STATION_CSV_HEADER,
-                from_line: 2                 // Ignoring the header line
             })
         );
 
     for await (const record of lineReader) {
         await saveStationRow(record);
-        console.log("Progress: ", lineReader.info.bytes / fileSize * 100, "%");
+
+        // Show import progress if app is started in development mode.
+        if (!__prod__)
+            console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
     }
 
-    return res.sendStatus(301);
+    // Send 201 status if data was successfully saved.
+    return res.sendStatus(201);
 }

@@ -6,10 +6,13 @@ import { Station } from "../entity/station";
 import { ROWS_PER_PAGE } from "../constants";
 import { StationView } from "../entity/stationView";
 
+/**
+ * Fetch a page of stations.
+ */
 export const fetchStationPage = async (req: Request, res: Response) => {
     const page: number = parseInt(req.params.page as string);
 
-    const stations = await AppDataSource
+    const stations: Station[] = await AppDataSource
         .getRepository(Station)
         .createQueryBuilder("station")
         .skip(ROWS_PER_PAGE * page)
@@ -19,22 +22,34 @@ export const fetchStationPage = async (req: Request, res: Response) => {
     return res.send(stations);
 }
 
+/**
+ * Fetch station data using its id.
+ */
 export const fetchStation = async (req: Request, res: Response) => {
     const stationId: number = parseInt(req.params.stationId as string);
 
-    const station = await AppDataSource
+    const station: Station | null = await AppDataSource
         .getRepository(Station)
         .findOneBy({ id: stationId });
+    
+    if (!station)
+        return res.sendStatus(404);
 
     return res.send(station);
 }
 
-export const fetchStationDetailed = async (req: Request, res: Response) => {
+/**
+ * Fetch StationView using station id.
+ */
+export const fetchStationView = async (req: Request, res: Response) => {
     const stationId: number = parseInt(req.params.stationId as string);
 
-    const station = await AppDataSource
+    const station: StationView | null = await AppDataSource
         .manager
         .findOneBy(StationView, { id: stationId });
+    
+    if (!station)
+        return res.sendStatus(404);
 
     return res.send(station);
 }

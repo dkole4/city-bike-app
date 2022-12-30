@@ -1,41 +1,29 @@
 import "reflect-metadata";
+
+import { config } from "dotenv";
+config();
+
 import express from "express";
-import multer from "multer";
-import os from "os";
 
 import { AppDataSource } from "./data-source";
-import { fetchStationDetailed, fetchStationPage } from "./controllers/station.controller";
-import { importJourneyData, importStationData } from "./controllers/import.contoller";
-import { fetchJourneyPage } from "./controllers/journey.controller";
-
-// Temporary location of imported CSV files
-const filePath: string = os.tmpdir();
-const upload: multer.Multer = multer({ dest: filePath });
+import { router as stationRouter } from "./routes/station.routes";
+import { router as journeyRouter } from "./routes/journey.routes";
+import { router as importRouter } from "./routes/import.routes";
 
 const main = async () => {
-    const app = express();
+    const app: express.Application = express();
 
     app.use(express.json());
 
     AppDataSource.initialize()
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
 
-    app.route("/api/station/:stationId")
-        .get(fetchStationDetailed);
+    // Add routes to the app.
+    app.use(stationRouter);
+    app.use(journeyRouter);
+    app.use(importRouter);
 
-    app.route("/api/stations/:page")
-        .get(fetchStationPage);
-
-    app.route("/api/journeys/:page")
-        .get(fetchJourneyPage);
-
-    app.route("/api/import/journey")
-        .post(upload.single("file"), importJourneyData);
-    
-    app.route("/api/import/station")
-        .post(upload.single("file"), importStationData);
-
-    app.listen(8080, () => {
+    app.listen(process.env.NODE_PORT, () => {
         console.log("App is listening at port 8080");
     });
 };
