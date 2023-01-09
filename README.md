@@ -15,14 +15,10 @@ To start the application, use command `docker-compose up` in the root directory.
 If you want to import data to the database, place `stations.csv` and `journeys.csv` files to the `/database/data` directory before starting the application.
 
 
-## Chosen technologies and why they were chosen
+## Used technologies and why they were chosen
 - TypeScript
   - Widely used in web-development currently.
-  - Makes writing code without bugs easier (compared to JS).
-  - I personally am interested in the language.
-- React
-  - Widely used in web-development currently.
-  - I have used React with JS in my past projects.
+  - Makes writing code without bugs easier.
 - PostgreSQL
   - I have used PostgreSQL in my past projects.
 - TypeORM
