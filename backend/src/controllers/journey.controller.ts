@@ -20,5 +20,5 @@ export const fetchJourneyPage = (req: Request, res: Response) => {
         .then((journeys: Journey[]) => {
             return res.send(journeys);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
 };
