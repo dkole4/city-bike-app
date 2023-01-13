@@ -10,7 +10,7 @@ import { StationView } from "../entity/stationView";
  * Fetch a page of stations.
  */
 export const fetchStationPage = async (req: Request, res: Response) => {
-    const page: number = parseInt(req.params.page as string);
+    const page: number = parseInt(req.params.page);
 
     const stations: Station[] = await AppDataSource
         .getRepository(Station)
@@ -20,13 +20,13 @@ export const fetchStationPage = async (req: Request, res: Response) => {
         .getMany();
 
     return res.send(stations);
-}
+};
 
 /**
  * Fetch station data using its id.
  */
 export const fetchStation = async (req: Request, res: Response) => {
-    const stationId: number = parseInt(req.params.stationId as string);
+    const stationId: number = parseInt(req.params.stationId);
 
     const station: Station | null = await AppDataSource
         .getRepository(Station)
@@ -36,13 +36,13 @@ export const fetchStation = async (req: Request, res: Response) => {
         return res.sendStatus(404);
 
     return res.send(station);
-}
+};
 
 /**
  * Fetch StationView using station id.
  */
 export const fetchStationView = async (req: Request, res: Response) => {
-    const stationId: number = parseInt(req.params.stationId as string);
+    const stationId: number = parseInt(req.params.stationId);
 
     const station: StationView | null = await AppDataSource
         .manager
@@ -52,4 +52,4 @@ export const fetchStationView = async (req: Request, res: Response) => {
         return res.sendStatus(404);
 
     return res.send(station);
-}
+};

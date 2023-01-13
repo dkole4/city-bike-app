@@ -9,7 +9,7 @@ import { Journey } from "../entity/journey";
  * Fetch a page of journeys.
  */
 export const fetchJourneyPage = async (req: Request, res: Response) => {
-    const page: number = parseInt(req.params.page as string);
+    const page: number = parseInt(req.params.page);
 
     const journeys: Journey[] = await AppDataSource
         .getRepository(Journey)
@@ -19,4 +19,4 @@ export const fetchJourneyPage = async (req: Request, res: Response) => {
         .getMany();
 
     return res.send(journeys);
-}
+};
