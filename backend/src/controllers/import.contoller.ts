@@ -7,6 +7,7 @@ import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station";
 import { Journey } from "../entity/journey";
 import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER, __prod__ } from "../constants";
+import { Repository } from "typeorm";
 
 
 /**
@@ -81,7 +82,8 @@ const saveJourneyRow = async (data: JourneyCSVRow): Promise<void> => {
     // Ignoring errors on duplicates reduces number of transactions needed
     // to process a journey compared to counting stations with
     // the same id before saving.
-    const stationRepository = AppDataSource.getRepository(Station);
+    const stationRepository: Repository<Station>
+        = AppDataSource.getRepository(Station);
 
     // If journey wasn't started and ended at the same station,
     // upsert both of them, and only one of them otherwise.
@@ -148,10 +150,11 @@ export const importJourneyData = async (req: Request, res: Response) => {
  * @param {StationCSVRow} data CSV row containing station data.
  */
 const saveStationRow = async (data: StationCSVRow) => {
-    const stationRepository = AppDataSource.getRepository(Station);
+    const stationRepository: Repository<Station>
+        = AppDataSource.getRepository(Station);
 
     // Create a Station instance from received data.
-    const station = stationRepository.create({
+    const station: Station = stationRepository.create({
         id: data.id,
         name: `${data.nimi} / ${data.namn} / ${data.name}`,
         address:
