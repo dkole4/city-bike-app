@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import fs from "fs";
 import { parse, Parser } from "csv-parse";
 
@@ -118,32 +118,34 @@ const saveJourneyRow = async (data: JourneyCSVRow): Promise<void> => {
 /**
  * Import CSV rows containing journey data into the database.
  */
-export const importJourneyData = async (req: Request, res: Response) => {
-    const file: Express.Multer.File | undefined = req.file;
+export const importJourneyData = (): RequestHandler => {
+    return async (req: Request, res: Response) => {
+        const file: Express.Multer.File | undefined = req.file;
 
-    // Send 400 status if CSV file not found.
-    if (!file) {
-        return res.sendStatus(400);
-    }
+        // Send 400 status if CSV file not found.
+        if (!file) {
+            return res.sendStatus(400);
+        }
 
-    const lineReader: Parser = fs.createReadStream(file.path)
-        .pipe(
-            parse({
-                columns: JOURNEY_CSV_HEADER,
-            })
-        );
+        const lineReader: Parser = fs.createReadStream(file.path)
+            .pipe(
+                parse({
+                    columns: JOURNEY_CSV_HEADER,
+                })
+            );
 
-    for await (const record of lineReader) {
-        await saveJourneyRow(record);
+        for await (const record of lineReader) {
+            await saveJourneyRow(record);
 
-        // Show import progress if app is started in development mode.
-        if (!__prod__)
-            console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
-    }
+            // Show import progress if app is started in development mode.
+            if (!__prod__)
+                console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
+        }
 
-    // Send 201 status if data was successfully saved.
-    return res.sendStatus(201);
-}
+        // Send 201 status if data was successfully saved.
+        return res.sendStatus(201);
+    };
+};
 
 /**
  * Save a CSV row contating station data to the database.
@@ -182,29 +184,31 @@ const saveStationRow = async (data: StationCSVRow) => {
 /**
  * Save station data to the database.
  */
-export const importStationData = async (req: Request, res: Response) => {
-    const file: Express.Multer.File | undefined = req.file;
+export const importStationData = (): RequestHandler => {
+    return async (req: Request, res: Response) => {
+        const file: Express.Multer.File | undefined = req.file;
 
-    // Send 400 status if CSV file not found.
-    if (!file) {
-        return res.sendStatus(400);
-    }
+        // Send 400 status if CSV file not found.
+        if (!file) {
+            return res.sendStatus(400);
+        }
 
-    const lineReader: Parser = fs.createReadStream(file.path)
-        .pipe(
-            parse({
-                columns: STATION_CSV_HEADER,
-            })
-        );
+        const lineReader: Parser = fs.createReadStream(file.path)
+            .pipe(
+                parse({
+                    columns: STATION_CSV_HEADER,
+                })
+            );
 
-    for await (const record of lineReader) {
-        await saveStationRow(record);
+        for await (const record of lineReader) {
+            await saveStationRow(record);
 
-        // Show import progress if app is started in development mode.
-        if (!__prod__)
-            console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
-    }
+            // Show import progress if app is started in development mode.
+            if (!__prod__)
+                console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
+        }
 
-    // Send 201 status if data was successfully saved.
-    return res.sendStatus(201);
-}
+        // Send 201 status if data was successfully saved.
+        return res.sendStatus(201);
+    };
+};

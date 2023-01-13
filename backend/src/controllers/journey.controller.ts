@@ -8,15 +8,17 @@ import { Journey } from "../entity/journey";
 /**
  * Fetch a page of journeys.
  */
-export const fetchJourneyPage = async (req: Request, res: Response) => {
+export const fetchJourneyPage = (req: Request, res: Response) => {
     const page: number = parseInt(req.params.page);
 
-    const journeys: Journey[] = await AppDataSource
+    AppDataSource
         .getRepository(Journey)
         .createQueryBuilder("journey")
         .skip(ROWS_PER_PAGE * page)
         .take(ROWS_PER_PAGE)
-        .getMany();
-
-    return res.send(journeys);
+        .getMany()
+        .then((journeys: Journey[]) => {
+            return res.send(journeys);
+        })
+        .catch((err) => console.log(err));
 };
