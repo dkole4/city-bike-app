@@ -12,8 +12,12 @@ services:
       - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER"]
-      interval: 5s
-      timeout: 5s
+      # Set to a larger number if datasets are large or
+      # if your machine cant import them fast enough.
+      # Consider starting the database service separately
+      # before the backend if its startup takes too much time.
+      interval: 30s
+      timeout: 20s
       retries: 5
   
   backend:
@@ -23,13 +27,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  
-  # frontend:
-  #   build: ./frontend/
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
 
 volumes:
   db_vol:
