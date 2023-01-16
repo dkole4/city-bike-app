@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
+import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
 import StationService, { Station } from "../services/stationService";
@@ -46,7 +46,11 @@ const StationList: React.FC<{}> = () => {
                 <Table.Body>
                     {stations.map((station) =>
                         <Table.Row key={station.id}>
-                            <Table.Cell>{station.name}</Table.Cell>
+                            <Table.Cell>
+                                <Link to={`/station/${station.id}`}>
+                                    {station.name}
+                                </Link>
+                            </Table.Cell>
                             <Table.Cell>{station.city}</Table.Cell>
                             <Table.Cell>{station.address}</Table.Cell>
                             <Table.Cell>{station.capacity}</Table.Cell>
