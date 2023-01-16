@@ -17,9 +17,9 @@ const PageNavigation: React.FC<PageNavigationProps> = ({ listType, page }) => {
             <Table>
                 <Table.Header>
                     <Table.Row>
-                        {   /* Add the first page to the left side to make moving to
+                        {/* Add the first page to the left side to make moving to
                             the start of the list easier for the user. */
-                            page > pagesBySide
+                            (page > pagesBySide)
                                 ? (
                                     <>
                                         <Table.Cell>
@@ -29,9 +29,12 @@ const PageNavigation: React.FC<PageNavigationProps> = ({ listType, page }) => {
                                     </>
                                 )
                                 : null}
-                        { /* Make links to pages that are in the range of [-5, 5] relative to the current page. */
+                        {/* Make links to pages that are in the range of
+                            [-5, 5] relative to the current page. */
                             Array
-                                .from({ length: accessibleRange }, (_, i) => page + i - (page > pagesBySide ? pagesBySide : page))
+                                .from(
+                                    { length: accessibleRange },
+                                    (_, i) => page + i - Math.min(page, pagesBySide))
                                 .map((pageNumber) => {
                                     return (
                                         <Table.Cell key={pageNumber}>
