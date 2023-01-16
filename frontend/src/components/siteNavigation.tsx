@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Table } from "semantic-ui-react";
 
-const NavigationBar: React.FC<{}> = () => {
+const SiteNavigation: React.FC<{}> = () => {
     return (
         <Container>
             <Table>
@@ -24,4 +24,4 @@ const NavigationBar: React.FC<{}> = () => {
     );
 };
 
-export default NavigationBar;
+export default SiteNavigation;
