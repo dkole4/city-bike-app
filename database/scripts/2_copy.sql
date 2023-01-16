@@ -4,7 +4,7 @@ SELECT
     ID, 
     Nimi || ' / ' || Namn || ' / ' || Name,
     Osoite || ' / ' || Adress,
-    CASE WHEN Kaupunki IS NOT NULL THEN Kaupunki || ' / ' || Stad ELSE NULL END,
+    CASE WHEN TRIM(Kaupunki) <> '' THEN Kaupunki || ' / ' || Stad ELSE '' END,
     Operaattor,
     Kapasiteet,
     x,
