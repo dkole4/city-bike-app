@@ -3,29 +3,52 @@ import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-ro
 import { Container, Header, Table } from "semantic-ui-react";
 
 import StationService, { Station } from "../services/stationService";
+import { Filter, getNextOrder } from "../util/filter";
 import PageNavigation from "./pageNavigation";
+import SortableColumns from "./sortableColumns";
 
 
 const StationList: React.FC<{}> = () => {
-    const [stations, setStations] = useState<Station[]>([]);
+    const params: Readonly<Params<string>> = useParams();
     const navigate: NavigateFunction = useNavigate();
 
-    const params: Readonly<Params<string>> = useParams();
-    const page: number = params.page ? parseInt(params.page) : 0;
+    const [stations, setStations] = useState<Station[]>([]);
+    // Filter of the list to use in journey data fetching.
+    const [filter, setFilter] = useState<Filter>({
+        name: undefined,
+        order: undefined
+    });
+    const page = params.page ? parseInt(params.page) : 0;
 
     useEffect(() => {
         // Navigate to the first page if negative page number was passed,
         // fetch station data otherwise.
         if (page < 0) {
             navigate("/stations/0");
-            console.log(page);
         }
         else {
             StationService
-                .getStations(page)
+                .getStations(page, filter.name, filter.order)
                 .then((values: Station[]) => setStations(values));
         }
-    }, [page, navigate]);
+    }, [page, filter, navigate]);
+
+    /**
+     * Change the sorting of the list using the name of a column to sort by.
+     * @param name name of the column to sort the list by.
+     */
+    const updateOrder = (name: string) => {
+        const newFilter: Filter = {
+            name,
+            order: (name === filter.name)
+                ? getNextOrder(filter.order)
+                : "ASC"
+        };
+        setFilter(newFilter);
+        
+        // Navigate to the first page of the list.
+        navigate("/stations/0");
+    }
 
     return (
         <Container>
@@ -34,16 +57,19 @@ const StationList: React.FC<{}> = () => {
             </Header>
             <PageNavigation listType="stations" page={page} />
             <Table>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>City</Table.HeaderCell>
-                        <Table.HeaderCell>Address</Table.HeaderCell>
-                        <Table.HeaderCell>Capacity</Table.HeaderCell>
-                        <Table.HeaderCell>Operator</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
+                <SortableColumns
+                    names={[
+                        "name",
+                        "city",
+                        "address",
+                        "capacity",
+                        "operator"
+                    ]}
+                    updateTableOrder={updateOrder}
+                    currentFilter={filter}
+                />
                 <Table.Body>
+                    { /** Creating rows of stations. */ }
                     {stations.map((station) =>
                         <Table.Row key={station.id}>
                             <Table.Cell>

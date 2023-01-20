@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Order } from "../util/filter";
 
 const { REACT_APP_BACKEND } = process.env;
 
@@ -14,9 +15,24 @@ export interface Journey {
 };
 
 const journeyService = {
-    getJourneys: async (page: number): Promise<Journey[]> => {
+    /**
+     * Get the list of journeys from a page.
+     * @param page the number of page to fetch data from.
+     * @param sortBy the column to sort the results by. Undefined by default.
+     * @param order the order to use in sorting. Undefined by default.
+     * @returns {Promise<Journey[]>} the list of journeys if fetching
+     * was successful, empty list otherwise.
+     */
+    getJourneys: async (
+        page: number,
+        sortBy: string | undefined = undefined,
+        order: Order = undefined
+    ): Promise<Journey[]> => {
         try {
-            const response = await axios.get(`${journeysUrl}/${page}`);
+            const url: string = `${journeysUrl}/${page}`
+                + (sortBy ? `?sortBy=${sortBy}` : ``)
+                + (order ? `&order=${order}` : ``);
+            const response = await axios.get(url);
             return response.data;
         } catch (err) {
             console.error(err);

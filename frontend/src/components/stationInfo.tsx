@@ -22,7 +22,7 @@ const StationInfo: React.FC<{}> = () => {
         else {
             StationService
                 .getStation(stationId)
-                .then((value: StationView | null) => {
+                .then((value: StationView | undefined) => {
                     if (!value) {
                         navigate("/stations/0");
                     }
