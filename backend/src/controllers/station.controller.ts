@@ -5,23 +5,33 @@ import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station";
 import { ROWS_PER_PAGE } from "../constants";
 import { StationView } from "../entity/stationView";
+import { PageRequestParams, PageRequestQueries } from "../util/pageRequests";
 
 /**
  * Fetch a page of stations.
  */
-export const fetchStationPage = (req: Request, res: Response) => {
-    const page: number = parseInt(req.params.page);
+export const fetchStationPage = (
+    req: Request<PageRequestParams, any, any, PageRequestQueries>,
+    res: Response
+) => {
+    const page: number = req.params.page;
+    const sortBy: string | undefined = req.query.sortBy;
+    const order: string | undefined = req.query.order;
 
     AppDataSource
         .getRepository(Station)
-        .createQueryBuilder("station")
-        .skip(ROWS_PER_PAGE * page)
-        .take(ROWS_PER_PAGE)
-        .getMany()
+        .find({
+            order: (sortBy && order) ? { [sortBy]: order } : undefined,
+            skip: ROWS_PER_PAGE * page,
+            take: ROWS_PER_PAGE
+        })
         .then((stations: Station[]) => {
             return res.send(stations);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+            console.error(err);
+            return res.sendStatus(400);
+        });
 };
 
 /**
@@ -39,7 +49,10 @@ export const fetchStation = (req: Request, res: Response) => {
 
             return res.send(station);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+            console.error(err);
+            return res.sendStatus(500);
+        });
 };
 
 /**
@@ -57,5 +70,8 @@ export const fetchStationView = (req: Request, res: Response) => {
 
             return res.send(station);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+            console.error(err);
+            return res.sendStatus(500);
+        });
 };
