@@ -44,6 +44,9 @@ export const router = Router();
  *                     type: number
  *                     description: Duration of journey in seconds.
  *                     example: 1239
+ *       400:
+ *         description: Request contains invalid data, for example negative page number,
+ *                      non-existent column name or invalid sorting order format.
  */
 router.route("/api/journeys/:page")
     .get(fetchJourneyPage);

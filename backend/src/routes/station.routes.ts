@@ -112,6 +112,9 @@ router.route("/api/station/:stationId")
  *                     type: number
  *                     description: Average distance of a journey ending at station.
  *                     example: 2874
+ *       400:
+ *         description: Request contains invalid data, for example negative page number,
+ *                      non-existent column name or invalid sorting order format.
  */
 router.route("/api/stations/:page")
     .get(fetchStationPage);
