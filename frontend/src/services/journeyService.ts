@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Order } from "../util/filter";
 
+// Backend URL
 const { REACT_APP_BACKEND } = process.env;
-
 const journeysUrl: string = `http://${REACT_APP_BACKEND}/journeys`;
 
 export interface Journey {
