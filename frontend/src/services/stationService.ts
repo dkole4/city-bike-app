@@ -1,39 +1,12 @@
 import axios from "axios";
+
+import { Station, StationView } from "../entities/station.entity";
 import { Order } from "../util/filter";
 
 // Backend URLs
 const { REACT_APP_BACKEND } = process.env;
 const stationsUrl: string = `http://${REACT_APP_BACKEND}/stations`;
 const singleStationUrl: string = `http://${REACT_APP_BACKEND}/station`;
-
-/**
- * Station data extended with average departure and return distances.
- */
-export interface StationView {
-    id: number;
-    name: string;
-    address: string;
-    longitude: number;
-    latitude: number;
-    departure_count: number;
-    average_departure_distance: number;
-    return_count: number;
-    average_return_distance: number;
-}
-
-/**
- * Basic station data.
- */
-export interface Station {
-    id: number;
-    name: string;
-    address: string;
-    city: string;
-    operator: string;
-    capacity: number;
-    longitude: number;
-    latitude: number;
-}
 
 const stationService = {
     /**

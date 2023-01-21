@@ -1,18 +1,11 @@
 import axios from "axios";
+
 import { Order } from "../util/filter";
+import { Journey } from "../entities/journey.entity";
 
 // Backend URL
 const { REACT_APP_BACKEND } = process.env;
 const journeysUrl: string = `http://${REACT_APP_BACKEND}/journeys`;
-
-export interface Journey {
-    departure_time: Date;
-    return_time: Date;
-    departure_station_id: number;
-    return_station_id: number;
-    covered_distance: number;
-    duration: number;
-};
 
 const journeyService = {
     /**
