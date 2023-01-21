@@ -21,8 +21,11 @@ CREATE TABLE IF NOT EXISTS journey (
   FOREIGN KEY(return_station_id) REFERENCES station(id)
 );
 
+-- Create views manually to avoid data loss in production in case TypeORM
+-- decides to recreate the database schema automatically because of its
+-- synchronize option. 
 CREATE VIEW station_view AS
-  SELECT "station"."id" AS "id",
+  SELECT "station"."id" AS "id", 
           "station"."name" AS "name",
           "station"."address" AS "address",
           "station"."longitude" AS "longitude",
@@ -48,3 +51,18 @@ CREATE VIEW station_view AS
       FROM "journey" "journey"
       GROUP BY "journey"."return_station_id"
   ) AS "returns" ON "station"."id" = "returns"."return_station_id";
+
+CREATE VIEW journey_view AS
+  SELECT "journey"."departure_time" AS "departure_time",
+          "journey"."return_time" AS "return_time",
+          "journey"."departure_station_id" AS "departure_station_id",
+          "journey"."return_station_id" AS "return_station_id",
+          "journey"."covered_distance" AS "covered_distance",
+          "journey"."duration" AS "duration",
+          "departure_station"."name" AS "departure_station_name",
+          "return_station"."name" AS "return_station_name"
+  FROM "journey" "journey"
+  LEFT JOIN "station" "departure_station"
+      ON "departure_station"."id" = "journey"."departure_station_id"
+  LEFT JOIN "station" "return_station" 
+      ON "return_station"."id" = "journey"."return_station_id";
