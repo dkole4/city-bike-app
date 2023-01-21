@@ -28,7 +28,7 @@ import { ViewColumn, ViewEntity } from "typeorm";
             FROM "journey" "journey"
             GROUP BY "journey"."return_station_id"
         ) AS "returns" ON "station"."id" = "returns"."return_station_id"
-    `,
+    `
 })
 export class StationView {
     @ViewColumn()

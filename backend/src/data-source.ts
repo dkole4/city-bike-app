@@ -1,9 +1,5 @@
 import { DataSource } from "typeorm";
 
-import { Station } from "./entity/station";
-import { Journey } from "./entity/journey";
-import { StationView } from "./entity/stationView";
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
@@ -14,7 +10,7 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     logging: true,
-    entities: [Station, StationView, Journey],
+    entities: [__dirname + "/**/*.entity.{js,ts}"],
     subscribers: [],
     migrations: ["./migration/**/*.ts"],
 });

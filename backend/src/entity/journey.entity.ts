@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from "typeorm";
 
-import { Station } from "./station";
+import { Station } from "./station.entity";
 
 @Entity()
 export class Journey {
@@ -24,7 +24,7 @@ export class Journey {
 
     @ManyToOne(() => Station, (station) => station.id)
     @JoinColumn({ name: "departure_station_id" })
-    public departure_station!: Station;
+    public departure_station!: string;
 
     @ManyToOne(() => Station, (station) => station.id)
     @JoinColumn({ name: "return_station_id" })

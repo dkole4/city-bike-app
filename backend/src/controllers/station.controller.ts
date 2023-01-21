@@ -2,9 +2,9 @@ import "reflect-metadata";
 import { Request, Response } from "express";
 
 import { AppDataSource } from "../data-source";
-import { Station } from "../entity/station";
+import { Station } from "../entity/station.entity";
 import { ROWS_PER_PAGE } from "../constants";
-import { StationView } from "../entity/stationView";
+import { StationView } from "../entity/stationView.entity";
 import { PageRequestParams, PageRequestQueries } from "../util/pageRequests";
 
 /**

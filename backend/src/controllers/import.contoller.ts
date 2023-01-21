@@ -4,8 +4,8 @@ import fs from "fs";
 import { parse, Parser } from "csv-parse";
 
 import { AppDataSource } from "../data-source";
-import { Station } from "../entity/station";
-import { Journey } from "../entity/journey";
+import { Station } from "../entity/station.entity";
+import { Journey } from "../entity/journey.entity";
 import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER, __prod__ } from "../constants";
 import { Repository } from "typeorm";
 

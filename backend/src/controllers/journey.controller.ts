@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import { AppDataSource } from "../data-source";
 import { ROWS_PER_PAGE } from "../constants";
-import { Journey } from "../entity/journey";
+import { JourneyView } from "../entity/journeyView.entity";
 import { PageRequestParams, PageRequestQueries } from "src/util/pageRequests";
 
 
@@ -19,13 +19,13 @@ export const fetchJourneyPage = (
     const order: string | undefined = req.query.order;
 
     AppDataSource
-        .getRepository(Journey)
+        .getRepository(JourneyView)
         .find({
             order: (sortBy && order) ? { [sortBy]: order } : undefined,
             skip: ROWS_PER_PAGE * page,
             take: ROWS_PER_PAGE
         })
-        .then((journeys: Journey[]) => {
+        .then((journeys: JourneyView[]) => {
             return res.send(journeys);
         })
         .catch((err) => {
