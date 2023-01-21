@@ -52,7 +52,7 @@ const JourneyList: React.FC<{}> = () => {
 
     return (
         <Container>
-            <Header className="Journey-list">
+            <Header block className="Journey-list">
                 Journey list, page: {page}
             </Header>
             <PageNavigation listType="journeys" page={page} />

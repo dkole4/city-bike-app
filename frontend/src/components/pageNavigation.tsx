@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Container, Table } from "semantic-ui-react";
+import { Button, Container, Table } from "semantic-ui-react";
 
 
 interface PageNavigationProps {
@@ -11,6 +11,8 @@ interface PageNavigationProps {
 const PageNavigation: React.FC<PageNavigationProps> = ({ listType, page }) => {
     const accessibleRange: number = 11;
     const pagesBySide: number = Math.floor(accessibleRange / 2);
+
+    const pageNumberStyle = { fontWeight: "bold" };
 
     return (
         <Container>
@@ -23,7 +25,13 @@ const PageNavigation: React.FC<PageNavigationProps> = ({ listType, page }) => {
                                 ? (
                                     <>
                                         <Table.Cell>
-                                            <Link to={`/${listType}/0`}>0</Link>
+                                            <Button as={Link}
+                                                fluid
+                                                style={pageNumberStyle}
+                                                to={`/${listType}/0`}
+                                            >
+                                                0
+                                            </Button>
                                         </Table.Cell>
                                         <Table.Cell>...</Table.Cell>
                                     </>
@@ -38,7 +46,14 @@ const PageNavigation: React.FC<PageNavigationProps> = ({ listType, page }) => {
                                 .map((pageNumber) => {
                                     return (
                                         <Table.Cell key={pageNumber}>
-                                            <Link to={`/${listType}/${pageNumber}`}>{pageNumber}</Link>
+                                            <Button as={Link}
+                                                disabled={page === pageNumber}
+                                                fluid
+                                                style={pageNumberStyle}
+                                                to={`/${listType}/${pageNumber}`}
+                                            >
+                                                {pageNumber}
+                                            </Button>
                                         </Table.Cell>
                                     )
                                 })

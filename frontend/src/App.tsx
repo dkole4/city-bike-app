@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { Container } from 'semantic-ui-react';
+import { Container, Divider } from 'semantic-ui-react';
 
 import JourneyList from './components/journeyList';
 import StationList from './components/stationList';
@@ -13,6 +13,7 @@ const App = () => {
         <Container className="App">
             <BrowserRouter>
                 <SiteNavigation />
+                <Divider />
                 <Routes>
                     <Route path="/journeys/:page" element={<JourneyList />} />
                     <Route path="/stations/:page" element={<StationList />} />

@@ -52,7 +52,7 @@ const StationList: React.FC<{}> = () => {
 
     return (
         <Container>
-            <Header className="Station-list">
+            <Header block className="Station-list">
                 Station list, page: {page}
             </Header>
             <PageNavigation listType="stations" page={page} />

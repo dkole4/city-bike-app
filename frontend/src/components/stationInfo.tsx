@@ -35,7 +35,7 @@ const StationInfo: React.FC<{}> = () => {
 
     return (
         <Container>
-            <Header className="Station-view">
+            <Header block className="Station-view">
                 Station view, ID: {stationId}
             </Header>
             {station &&
