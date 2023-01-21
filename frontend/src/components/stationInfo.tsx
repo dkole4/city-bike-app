@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
-import StationService, { StationView } from "../services/stationService";
+import { StationView } from "../entities/station.entity";
+import StationService from "../services/stationService";
 import MapView from "./mapView";
 
 
@@ -62,8 +63,8 @@ const StationInfo: React.FC<{}> = () => {
                         <Table.Row>
                             <Table.Cell colSpan={6}>
                                 <MapView
-                                    latitude={station.latitude}
-                                    longitude={station.longitude}
+                                    lat={station.latitude}
+                                    lng={station.longitude}
                                 />
                             </Table.Cell>
                         </Table.Row>

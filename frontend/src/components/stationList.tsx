@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
-import StationService, { Station } from "../services/stationService";
+import { Station } from "../entities/station.entity";
+import StationService from "../services/stationService";
 import { Filter, getNextOrder } from "../util/filter";
 import PageNavigation from "./pageNavigation";
 import SortableColumns from "./sortableColumns";

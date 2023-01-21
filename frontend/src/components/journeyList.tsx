@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
-import JourneyService, { Journey } from "../services/journeyService";
+import { Journey } from "../entities/journey.entity";
+import JourneyService from "../services/journeyService";
 import { Filter, getNextOrder } from "../util/filter";
 import PageNavigation from "./pageNavigation";
 import SortableColumns from "./sortableColumns";
@@ -75,12 +76,12 @@ const JourneyList: React.FC<{}> = () => {
                         <Table.Row key={index}>
                             <Table.Cell>
                                 <Link to={`/station/${journey.departure_station_id}`}>
-                                    {journey.departure_station_id}
+                                    {journey.departure_station_name}
                                 </Link>
                             </Table.Cell>
                             <Table.Cell>
                                 <Link to={`/station/${journey.return_station_id}`}>
-                                    {journey.return_station_id}
+                                    {journey.return_station_name}
                                 </Link>
                             </Table.Cell>
                             <Table.Cell>{journey.departure_time.toString()}</Table.Cell>
