@@ -72,46 +72,53 @@ router.route("/api/station/:stationId")
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     description: Station ID.
- *                     example: 0
- *                   name:
- *                     type: string
- *                     description: Station name.
- *                     example: Teljäntie
- *                   address:
- *                     type: string
- *                     description: Station address.
- *                     example: Ulvilantie 21 / Ulfsbyvägen 21
- *                   longitude:
- *                     type: number
- *                     description: Station longitude.
- *                     example: 24.868656
- *                   latitude:
- *                     type: number
- *                     description: Station latitude.
- *                     example: 60.20969
- *                   departure_count:
- *                     type: number
- *                     description: Number of journeys starting from station.
- *                     example: 1348
- *                   average_departure_distance:
- *                     type: number
- *                     description: Average distance of a journey starting from station.
- *                     example: 2854
- *                   return_count:
- *                     type: number
- *                     description: Number of journeys ending at station.
- *                     example: 1349
- *                   average_return_count:
- *                     type: number
- *                     description: Average distance of a journey ending at station.
- *                     example: 2874
+ *               type: object
+ *               properties:
+ *                 pages:
+ *                   type: number
+ *                   description: The total number of pages that can be returned.
+ *                   example: 20
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Station ID.
+ *                         example: 0
+ *                       name:
+ *                         type: string
+ *                         description: Station name.
+ *                         example: Teljäntie
+ *                       address:
+ *                         type: string
+ *                         description: Station address.
+ *                         example: Ulvilantie 21 / Ulfsbyvägen 21
+ *                       longitude:
+ *                         type: number
+ *                         description: Station longitude.
+ *                         example: 24.868656
+ *                       latitude:
+ *                         type: number
+ *                         description: Station latitude.
+ *                         example: 60.20969
+ *                       departure_count:
+ *                         type: number
+ *                         description: Number of journeys starting from station.
+ *                         example: 1348
+ *                       average_departure_distance:
+ *                         type: number
+ *                         description: Average distance of a journey starting from station.
+ *                         example: 2854
+ *                       return_count:
+ *                         type: number
+ *                         description: Number of journeys ending at station.
+ *                         example: 1349
+ *                       average_return_count:
+ *                         type: number
+ *                         description: Average distance of a journey ending at station.
+ *                         example: 2874
  *       400:
  *         description: Request contains invalid data, for example negative page number,
  *                      non-existent column name or invalid sorting order format.

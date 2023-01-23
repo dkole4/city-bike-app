@@ -1,32 +1,45 @@
 import "reflect-metadata";
 import { Request, Response } from "express";
+import { FindOptionsWhere, ILike } from "typeorm";
 
 import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station.entity";
 import { ROWS_PER_PAGE } from "../constants";
 import { StationView } from "../entity/stationView.entity";
-import { PageRequestParams, PageRequestQueries } from "../util/pageRequests";
+import { PageRequestParams, StationRequestQueries } from "../util/pageRequests";
 
 /**
  * Fetch a page of stations.
  */
 export const fetchStationPage = (
-    req: Request<PageRequestParams, any, any, PageRequestQueries>,
+    req: Request<PageRequestParams, any, any, StationRequestQueries>,
     res: Response
 ) => {
+    // Request parameters.
     const page: number = req.params.page;
+
+    // Request queries.
     const sortBy: string | undefined = req.query.sortBy;
     const order: string | undefined = req.query.order;
+    // Add conditions only if queries for name and address were defined.
+    const whereConditions: FindOptionsWhere<Station>[] = [
+        ...(req.query.name ? [{ name: ILike(`%${req.query.name}%`) }] : []),
+        ...(req.query.address ? [{ address: ILike(`%${req.query.address}%`) }] : [])
+    ];
 
     AppDataSource
         .getRepository(Station)
-        .find({
+        .findAndCount({
             order: (sortBy && order) ? { [sortBy]: order } : undefined,
+            where: whereConditions.length > 0 ? whereConditions : undefined,
             skip: ROWS_PER_PAGE * page,
             take: ROWS_PER_PAGE
         })
-        .then((stations: Station[]) => {
-            return res.send(stations);
+        .then(([stations, size]: [Station[], number]) => {
+            return res.send({ 
+                pages: Math.ceil(size / ROWS_PER_PAGE),
+                data: stations
+            });
         })
         .catch((err) => {
             console.error(err);
