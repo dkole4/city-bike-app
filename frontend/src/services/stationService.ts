@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Station, StationView } from "../entities/station.entity";
+import { StationResponse, StationView } from "../entities/station.entity";
 import { Order } from "../util/filter";
 
 // Backend URLs
@@ -14,14 +14,15 @@ const stationService = {
      * @param page the number of page to fetch data from.
      * @param sortBy the column to sort the results by. Undefined by default.
      * @param order the order to use in sorting. Undefined by default.
-     * @returns {Promise<Station[]>} the list of stations if fetching
-     * was successful, empty list otherwise.
+     * @returns {Promise<StationResponse>} response object containing the list
+     * of stations and number of pages if fetching was successful,
+     * empty list otherwise.
      */
     getStations: async (
         page: number,
         sortBy: string | undefined = undefined,
         order: Order = undefined
-    ): Promise<Station[]> => {
+    ): Promise<StationResponse> => {
         try {
             const url: string = `${stationsUrl}/${page}`
                 + (sortBy ? `?sortBy=${sortBy}` : ``)
@@ -30,7 +31,7 @@ const stationService = {
             return response.data;
         } catch (err) {
             console.error(err);
-            return [];
+            return { pages: 0, data: [] };
         }
     },
 

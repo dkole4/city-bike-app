@@ -13,3 +13,13 @@ export interface Journey {
     departure_station_name: string;
     return_station_name: string;
 };
+
+/**
+ * Represents the response containing a page of Journeys.
+ * 
+ * @interface JourneyResponse
+ */
+export interface JourneyResponse {
+    pages: number;
+    data: Journey[];
+}

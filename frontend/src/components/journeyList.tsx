@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
-import { Journey } from "../entities/journey.entity";
+import { JourneyResponse } from "../entities/journey.entity";
 import JourneyService from "../services/journeyService";
 import { Filter, getNextOrder } from "../util/filter";
 import PageNavigation from "./pageNavigation";
@@ -13,7 +13,10 @@ const JourneyList: React.FC<{}> = () => {
     const params: Readonly<Params<string>> = useParams();
     const navigate: NavigateFunction = useNavigate();
 
-    const [journeys, setJourneys] = useState<Journey[]>([]);
+    const [response, setResponse] = useState<JourneyResponse>({
+        pages: 0,
+        data: []
+    });
     // Filter of the list to use in journey data fetching.
     const [filter, setFilter] = useState<Filter>({
         name: undefined,
@@ -30,7 +33,7 @@ const JourneyList: React.FC<{}> = () => {
         else {
             JourneyService
                 .getJourneys(page, filter.name, filter.order)
-                .then((values: Journey[]) => setJourneys(values));
+                .then((value: JourneyResponse) => setResponse(value));
         }
     }, [page, filter, navigate]);
 
@@ -56,7 +59,11 @@ const JourneyList: React.FC<{}> = () => {
             <Header block className="Journey-list">
                 Journey list, page: {page}
             </Header>
-            <PageNavigation listType="journeys" page={page} />
+            <PageNavigation
+                listType="journeys"
+                page={page}
+                totalPages={response.pages} 
+            />
             <Table>
                 <SortableColumns
                     names={[
@@ -72,7 +79,7 @@ const JourneyList: React.FC<{}> = () => {
                 />
                 <Table.Body>
                     { /** Creating rows of journeys. */ }
-                    {journeys.map((journey, index) =>
+                    {response.data.map((journey, index) =>
                         <Table.Row key={index}>
                             <Table.Cell>
                                 <Link to={`/station/${journey.departure_station_id}`}>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { Order } from "../util/filter";
-import { Journey } from "../entities/journey.entity";
+import { JourneyResponse } from "../entities/journey.entity";
 
 // Backend URL
 const { REACT_APP_BACKEND } = process.env;
@@ -13,14 +13,15 @@ const journeyService = {
      * @param page the number of page to fetch data from.
      * @param sortBy the column to sort the results by. Undefined by default.
      * @param order the order to use in sorting. Undefined by default.
-     * @returns {Promise<Journey[]>} the list of journeys if fetching
-     * was successful, empty list otherwise.
+     * @returns {Promise<JourneyResponse>} response object containing the list
+     * of journeys and number of pages if fetching was successful,
+     * empty list otherwise.
      */
     getJourneys: async (
         page: number,
         sortBy: string | undefined = undefined,
         order: Order = undefined
-    ): Promise<Journey[]> => {
+    ): Promise<JourneyResponse> => {
         try {
             const url: string = `${journeysUrl}/${page}`
                 + (sortBy ? `?sortBy=${sortBy}` : ``)
@@ -29,7 +30,7 @@ const journeyService = {
             return response.data;
         } catch (err) {
             console.error(err);
-            return [];
+            return { pages: 0, data: [] };
         }
     }
 };

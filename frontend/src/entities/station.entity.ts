@@ -30,3 +30,23 @@ export interface Station {
     longitude: number;
     latitude: number;
 }
+
+/**
+ * Represents the response containing a page of Stations.
+ * 
+ * @interface StationResponse
+ */
+export interface StationResponse {
+    pages: number;
+    data: Station[];
+}
+
+/**
+ * Represents the response containing a page of StationViews.
+ * 
+ * @interface StationViewResponse
+ */
+export interface StationViewResponse {
+    pages: number;
+    data: StationView[];
+}

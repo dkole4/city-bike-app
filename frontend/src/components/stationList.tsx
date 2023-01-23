@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, NavigateFunction, Params, useNavigate, useParams } from "react-router-dom";
 import { Container, Header, Table } from "semantic-ui-react";
 
-import { Station } from "../entities/station.entity";
+import { StationResponse } from "../entities/station.entity";
 import StationService from "../services/stationService";
 import { Filter, getNextOrder } from "../util/filter";
 import PageNavigation from "./pageNavigation";
@@ -13,7 +13,10 @@ const StationList: React.FC<{}> = () => {
     const params: Readonly<Params<string>> = useParams();
     const navigate: NavigateFunction = useNavigate();
 
-    const [stations, setStations] = useState<Station[]>([]);
+    const [response, setResponse] = useState<StationResponse>({
+        pages: 0,
+        data: []
+    });
     // Filter of the list to use in journey data fetching.
     const [filter, setFilter] = useState<Filter>({
         name: undefined,
@@ -30,7 +33,7 @@ const StationList: React.FC<{}> = () => {
         else {
             StationService
                 .getStations(page, filter.name, filter.order)
-                .then((values: Station[]) => setStations(values));
+                .then((value: StationResponse) => setResponse(value));
         }
     }, [page, filter, navigate]);
 
@@ -56,7 +59,7 @@ const StationList: React.FC<{}> = () => {
             <Header block className="Station-list">
                 Station list, page: {page}
             </Header>
-            <PageNavigation listType="stations" page={page} />
+            <PageNavigation listType="stations" page={page} totalPages={response.pages} />
             <Table>
                 <SortableColumns
                     names={[
@@ -71,7 +74,7 @@ const StationList: React.FC<{}> = () => {
                 />
                 <Table.Body>
                     { /** Creating rows of stations. */ }
-                    {stations.map((station) =>
+                    {response.data.map((station) =>
                         <Table.Row key={station.id}>
                             <Table.Cell>
                                 <Link to={`/station/${station.id}`}>
