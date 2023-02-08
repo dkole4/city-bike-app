@@ -26,7 +26,7 @@ To configure the app:
 ## Running tests
 
 - To run backend tests:
-  - Place `stations.csv` and `journey.csv` files to the `/database/data` folder,
+  - Place `stations.csv` and `journeys.csv` files to the `/database/data` folder,
   - Run command `docker-compose up --build backend-tests`. 
 
 ## Used technologies and why they were chosen
