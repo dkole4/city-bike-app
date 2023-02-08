@@ -5,7 +5,7 @@ import { FindOptionsWhere, ILike } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { JourneyView } from "../entity/journeyView.entity";
-import { PageRequestParams, JourneyRequestQueries } from "src/util/pageRequests";
+import { PageRequestParams, JourneyRequestQueries } from "../util/pageRequests";
 
 
 /**
