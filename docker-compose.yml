@@ -21,9 +21,23 @@ services:
       retries: 5
   
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: app-build
+    command: ["node", "dist/index.js"]
     ports:
       - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  backend-tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: app-test
+    command: ["npm", "run", "test"]
     depends_on:
       db:
         condition: service_healthy

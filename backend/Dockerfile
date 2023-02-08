@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18 as base
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -10,12 +10,13 @@ RUN npm install
 
 # Copy source files to the image
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Set environment to production
-ENV NODE_ENV production
+# Skip building if testing version was chosen
+FROM base as app-test
+ENV NODE_ENV test
 
-CMD [ "node", "dist/index.js" ]
+# Build the app if build version was chosen
+FROM base as app-build
+ENV NODE_ENV production
 USER node
