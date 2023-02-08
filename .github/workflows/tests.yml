@@ -1,0 +1,17 @@
+name: Application Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test building the app and testing the backend
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Build and run backend-tests image
+      run: docker-compose --file docker-compose.yml up --build backend-tests
