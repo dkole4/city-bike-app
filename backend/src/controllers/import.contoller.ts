@@ -6,7 +6,7 @@ import { parse, Parser } from "csv-parse";
 import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station.entity";
 import { Journey } from "../entity/journey.entity";
-import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER, __prod__ } from "../constants";
+import { JOURNEY_CSV_HEADER, STATION_CSV_HEADER, __test__ } from "../constants";
 import { Repository } from "typeorm";
 
 
@@ -137,8 +137,8 @@ export const importJourneyData = (): RequestHandler => {
         for await (const record of lineReader) {
             await saveJourneyRow(record);
 
-            // Show import progress if app is started in development mode.
-            if (!__prod__)
+            // Show import progress if app is started in test mode.
+            if (__test__)
                 console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
         }
 
@@ -204,7 +204,7 @@ export const importStationData = (): RequestHandler => {
             await saveStationRow(record);
 
             // Show import progress if app is started in development mode.
-            if (!__prod__)
+            if (__test__)
                 console.log("Progress: ", lineReader.info.bytes / file.size * 100, "%");
         }
 
