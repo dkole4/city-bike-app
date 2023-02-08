@@ -26,7 +26,7 @@ const main = async () => {
     app.use(importRouter);
 
     app.listen(process.env.NODE_PORT, () => {
-        console.log("App is listening at port 8080");
+        console.log(`App is listening at port ${process.env.NODE_PORT}`);
     });
 };
 

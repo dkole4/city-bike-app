@@ -4,7 +4,7 @@ import { FindOptionsWhere, ILike } from "typeorm";
 
 import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station.entity";
-import { ROWS_PER_PAGE } from "../constants";
+import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { StationView } from "../entity/stationView.entity";
 import { PageRequestParams, StationRequestQueries } from "../util/pageRequests";
 
@@ -36,13 +36,15 @@ export const fetchStationPage = (
             take: ROWS_PER_PAGE
         })
         .then(([stations, size]: [Station[], number]) => {
-            return res.send({ 
+            return res.send({
                 pages: Math.ceil(size / ROWS_PER_PAGE),
                 data: stations
             });
         })
         .catch((err) => {
-            console.error(err);
+            if (!__test__)
+                console.error(err);
+
             return res.sendStatus(400);
         });
 };
@@ -63,7 +65,9 @@ export const fetchStation = (req: Request, res: Response) => {
             return res.send(station);
         })
         .catch((err) => {
-            console.error(err);
+            if (!__test__)
+                console.error(err);
+
             return res.sendStatus(500);
         });
 };
@@ -84,7 +88,9 @@ export const fetchStationView = (req: Request, res: Response) => {
             return res.send(station);
         })
         .catch((err) => {
-            console.error(err);
+            if (!__test__)
+                console.error(err);
+            
             return res.sendStatus(500);
         });
 };

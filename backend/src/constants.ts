@@ -1,4 +1,4 @@
-export const __prod__ = process.env.NODE_ENV === "production";
+export const __test__ = process.env.NODE_ENV === "test";
 
 // The number of database rows to use in pagination.
 export const ROWS_PER_PAGE: number = 20;

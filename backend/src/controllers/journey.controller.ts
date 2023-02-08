@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { FindOptionsWhere, ILike } from "typeorm";
 
 import { AppDataSource } from "../data-source";
-import { ROWS_PER_PAGE } from "../constants";
+import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { JourneyView } from "../entity/journeyView.entity";
 import { PageRequestParams, JourneyRequestQueries } from "src/util/pageRequests";
 
@@ -45,7 +45,9 @@ export const fetchJourneyPage = (
             });
         })
         .catch((err) => {
-            console.error(err);
+            if (!__test__)
+                console.error(err);
+            
             return res.sendStatus(400);
         });
 };
