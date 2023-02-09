@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { fetchStationView, fetchStationPage } from "../controllers/station.controller";
+import { fetchStationView, fetchStationPage, saveStation } from "../controllers/station.controller";
 
 export const router = Router();
 
@@ -125,3 +125,84 @@ router.route("/api/station/:stationId")
  */
 router.route("/api/stations/:page")
     .get(fetchStationPage);
+
+/**
+ * /station:
+ *   post:
+ *     summary: Create a Station.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: Station ID.
+ *                 example: 0
+ *               name:
+ *                 type: string
+ *                 description: Station name.
+ *                 example: Teljäntie
+ *               address:
+ *                 type: string
+ *                 description: Station address.
+ *                 example: Ulvilantie 21 / Ulfsbyvägen 21
+ *               operator:
+ *                 type: string
+ *                 description: Station operator
+ *                 example: BikeOperator.
+ *               capacity:
+ *                 type: number
+ *                 description: Station capacity.
+ *                 example: 12
+ *               longitude:
+ *                 type: number
+ *                 description: Station longitude.
+ *                 example: 24.868656
+ *               latitude:
+ *                 type: number
+ *                 description: Station latitude.
+ *                 example: 60.20969
+ *     responses:
+ *       201:
+ *         description: Station was created.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: Station ID.
+ *                   example: 0
+ *                 name:
+ *                   type: string
+ *                   description: Station name.
+ *                   example: Teljäntie
+ *                 address:
+ *                   type: string
+ *                   description: Station address.
+ *                   example: Ulvilantie 21 / Ulfsbyvägen 21
+ *                 operator:
+ *                   type: string
+ *                   description: Station operator
+ *                   example: BikeOperator.
+ *                 capacity:
+ *                   type: number
+ *                   description: Station capacity.
+ *                   example: 12
+ *                 longitude:
+ *                   type: number
+ *                   description: Station longitude.
+ *                   example: 24.868656
+ *                 latitude:
+ *                   type: number
+ *                   description: Station latitude.
+ *                   example: 60.20969
+ *       400:
+ *         description: Station with the same id already exists.
+*/
+router.route("/api/station/")
+    .post(saveStation);

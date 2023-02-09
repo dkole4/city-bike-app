@@ -90,7 +90,30 @@ export const fetchStationView = (req: Request, res: Response) => {
         .catch((err) => {
             if (!__test__)
                 console.error(err);
-            
+
             return res.sendStatus(500);
         });
+};
+
+/**
+ * Save Station data.
+ */
+export const saveStation = async (req: Request<any, Station | undefined, Station, any>, res: Response) => {
+    // Check if there are already stations with the same
+    // id, send 400 status if found any.
+    const count: number = await AppDataSource
+        .getRepository(Station)
+        .countBy({ id: req.body.id });
+
+    if (count > 0)
+        return res.sendStatus(400);
+
+    // Save station data if no station with the same id was found.
+    const savedStation = await AppDataSource
+        .getRepository(Station)
+        .save(req.body);
+    
+    return res
+        .status(201)
+        .send(savedStation);
 };
