@@ -16,7 +16,7 @@ To configure the app:
 ## Starting the app
 
 - To start the backend part of the application:
-  - Place `stations.csv` and `journeys.csv` files to the `/database/data` folder. Leave them empty to if you don't want to import any data on the startup.
+  - If you want to import data on the startup, place `stations.csv` and `journeys.csv` files to the `/database/data` folder. 
   - Run command `docker-compose up --build`.
 
 - To start the frontend in development mode:
@@ -26,7 +26,6 @@ To configure the app:
 ## Running tests
 
 - To run backend tests:
-  - Place `stations.csv` and `journeys.csv` files to the `/database/data` folder,
   - Run command `docker-compose up --build backend-tests`. 
 
 ## Used technologies and why they were chosen
