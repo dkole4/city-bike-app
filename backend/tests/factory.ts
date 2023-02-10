@@ -4,7 +4,6 @@ import "reflect-metadata";
 import { config } from 'dotenv';
 config();
 
-import { DataSource } from 'typeorm';
 import { createServer, Server as HttpServer } from 'http';
 
 import express from 'express';
@@ -20,15 +19,10 @@ import { AppDataSource } from "../src/data-source";
  */
 export class TestFactory {
     private _app: express.Application;
-    private _dataSource: DataSource;
     private _server: HttpServer;
 
     public get app(): supertest.SuperTest<supertest.Test> {
         return supertest(this._app);
-    }
-
-    public get dataSource(): DataSource {
-        return this._dataSource;
     }
 
     public get server(): HttpServer {
