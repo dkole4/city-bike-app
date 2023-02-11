@@ -41,14 +41,14 @@ describe('Testing station endpoints', () => {
                         const savedStation: Station = res.body;
 
                         assert(res.status == 201, "response status code should be 201");
-                        assert(savedStation.id == testStation.id, "id of saved station should be the same as in the request body");
-                        assert(savedStation.name == testStation.name, "name of saved station should be the same as in the request body");
-                        assert(savedStation.address == testStation.address, "address of saved station should be the same as in the request body");
-                        assert(savedStation.city == testStation.city, "city of saved station should be the same as in the request body");
-                        assert(savedStation.operator == testStation.operator, "operator of saved station should be the same as in the request body");
-                        assert(savedStation.capacity == testStation.capacity, "capacity of saved station should be the same as in the request body");
-                        assert(savedStation.latitude == testStation.latitude, "latitude of saved station should be the same as in the request body");
-                        assert(savedStation.longitude == testStation.longitude, "longitude of saved station should be the same as in the request body");
+                        assert(savedStation.id === testStation.id, "id of saved station should be the same as in the request body");
+                        assert(savedStation.name === testStation.name, "name of saved station should be the same as in the request body");
+                        assert(savedStation.address === testStation.address, "address of saved station should be the same as in the request body");
+                        assert(savedStation.city === testStation.city, "city of saved station should be the same as in the request body");
+                        assert(savedStation.operator === testStation.operator, "operator of saved station should be the same as in the request body");
+                        assert(savedStation.capacity === testStation.capacity, "capacity of saved station should be the same as in the request body");
+                        assert(savedStation.latitude === testStation.latitude, "latitude of saved station should be the same as in the request body");
+                        assert(savedStation.longitude === testStation.longitude, "longitude of saved station should be the same as in the request body");
 
                         return done();
                     } catch (e) {
@@ -59,7 +59,7 @@ describe('Testing station endpoints', () => {
 
         it("Saved station data can be fetched from the app", (done) => {
             factory.app
-                .get("/api/station/0")
+                .get(`/api/station/${testStation.id}`)
                 .set("Accept", "application/json")
                 .send()
                 .end((err, res) => {
@@ -68,18 +68,18 @@ describe('Testing station endpoints', () => {
 
                         const station: StationView = res.body;
 
-                        assert(res.status == 200, "response status code should be 200");
+                        assert(res.status === 200, "response status code should be 200");
                         assert(station.id == testStation.id, "id of saved station should be the same as in the request body");
-                        assert(station.name == testStation.name, "name of saved station should be the same as in the request body");
-                        assert(station.address == testStation.address, "address of saved station should be the same as in the request body");
+                        assert(station.name === testStation.name, "name of saved station should be the same as in the request body");
+                        assert(station.address === testStation.address, "address of saved station should be the same as in the request body");
 
                         // City, operator and capacity are not included in the StationView.
                         // assert(station.city == testStation.city, "city of saved station should be the same as in the request body");
                         // assert(station.operator == testStation.operator, "operator of saved station should be the same as in the request body");
                         // assert(station.capacity == testStation.capacity, "capacity of saved station should be the same as in the request body");
                         
-                        assert(station.latitude == testStation.latitude, "latitude of saved station should be the same as in the request body");
-                        assert(station.longitude == testStation.longitude, "longitude of saved station should be the same as in the request body");
+                        assert(station.latitude === testStation.latitude, "latitude of saved station should be the same as in the request body");
+                        assert(station.longitude === testStation.longitude, "longitude of saved station should be the same as in the request body");
 
                         return done();
                     } catch (e) {
@@ -97,7 +97,7 @@ describe('Testing station endpoints', () => {
                     try {
                         if (err) throw err;
 
-                        assert(res.status == 400, "response status code should be 400");
+                        assert(res.status === 400, "response status code should be 400");
                         assert.isEmpty(res.body, "response body should be empty");
 
                         return done();
