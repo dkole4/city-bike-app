@@ -60,9 +60,6 @@ describe('Testing journey endpoints', () => {
                             "departure station id of saved journey should be the same as in the request body");
                         assert(savedJourney.return_station_id === testJourney.return_station_id,
                             "return station id of saved journey should be the same as in the request body");
-                        console.log(savedJourney.departure_time.toString());
-                        console.log(testJourney.departure_time);
-
                         assert(savedJourney.departure_time.toString() == testJourney.departure_time,
                             "departure time of saved journey should be the same as in the request body");
                         assert(savedJourney.return_time.toString() == testJourney.return_time,
