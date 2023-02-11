@@ -5,6 +5,7 @@ import { FindOptionsWhere, ILike } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { JourneyView } from "../entity/journeyView.entity";
+import { Journey } from "../entity/journey.entity";
 import { PageRequestParams, JourneyRequestQueries } from "../util/pageRequests";
 
 
@@ -50,4 +51,32 @@ export const fetchJourneyPage = (
             
             return res.sendStatus(400);
         });
+};
+
+/**
+ * Save Journey data.
+ */
+export const saveJourney = async (req: Request<any, Journey | undefined, Journey, any>, res: Response) => {
+    // Check if there are already journeys with the same
+    // primary keys, send 400 status if found any.
+    const count: number = await AppDataSource
+        .getRepository(Journey)
+        .countBy({
+            departure_time: req.body.departure_time,
+            return_time: req.body.return_time,
+            departure_station_id: req.body.departure_station_id,
+            return_station_id: req.body.return_station_id
+        });
+
+    if (count > 0)
+        return res.sendStatus(400);
+
+    // Save journey data if no journey with the same primary key was found.
+    const savedJourney = await AppDataSource
+        .getRepository(Journey)
+        .save(req.body);
+    
+    return res
+        .status(201)
+        .send(savedJourney);
 };

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { fetchJourneyPage } from "../controllers/journey.controller";
+import { fetchJourneyPage, saveJourney } from "../controllers/journey.controller";
 
 export const router = Router();
 
@@ -57,3 +57,76 @@ export const router = Router();
  */
 router.route("/api/journeys/:page")
     .get(fetchJourneyPage);
+
+/**
+ * /journey:
+ *   post:
+ *     summary: Save a Journey.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               departure_time:
+ *                 type: string
+ *                 description: Timestamp of departure time.
+ *                 example: 2021-05-31T23:33:29.000Z
+ *               return_time:
+ *                 type: string
+ *                 description: Timestamp of return time.
+ *                 example: 2021-05-31T23:54:13.000Z
+ *               departure_station_id:
+ *                 type: number
+ *                 description: The id of the station journey starts from.
+ *                 example: 547
+ *               return_station_id:
+ *                 type: number
+ *                 description: The id of the station journey ends at.
+ *                 example: 547
+ *               covered_distance:
+ *                 type: number
+ *                 description: Distance covered during journey in meters.
+ *                 example: 1872
+ *               duration:
+ *                 type: number
+ *                 description: Duration of journey in seconds.
+ *                 example: 1239
+ *     responses:
+ *       201:
+ *         description: Journey was saved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 departure_time:
+ *                   type: string
+ *                   description: Timestamp of departure time.
+ *                   example: 2021-05-31T23:33:29.000Z
+ *                 return_time:
+ *                   type: string
+ *                   description: Timestamp of return time.
+ *                   example: 2021-05-31T23:54:13.000Z
+ *                 departure_station_id:
+ *                   type: number
+ *                   description: The id of the station journey starts from.
+ *                   example: 547
+ *                 return_station_id:
+ *                   type: number
+ *                   description: The id of the station journey ends at.
+ *                   example: 547
+ *                 covered_distance:
+ *                   type: number
+ *                   description: Distance covered during journey in meters.
+ *                   example: 1872
+ *                 duration:
+ *                   type: number
+ *                   description: Duration of journey in seconds.
+ *                   example: 1239
+ *       400:
+ *         description: Journey with the same primary key already exists.
+ */
+router.route("/api/journey")
+    .post(saveJourney);
