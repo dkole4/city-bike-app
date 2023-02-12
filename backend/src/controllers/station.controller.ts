@@ -6,7 +6,8 @@ import { AppDataSource } from "../data-source";
 import { Station } from "../entity/station.entity";
 import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { StationView } from "../entity/stationView.entity";
-import { PageRequestParams, StationRequestQueries } from "../util/pageRequests";
+import { PageRequestParams } from "../util/requestParameters";
+import { StationRequestQueries } from "../util/requestQueries";
 
 /**
  * Fetch a page of stations.

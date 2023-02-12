@@ -6,7 +6,8 @@ import { AppDataSource } from "../data-source";
 import { ROWS_PER_PAGE, __test__ } from "../constants";
 import { JourneyView } from "../entity/journeyView.entity";
 import { Journey } from "../entity/journey.entity";
-import { PageRequestParams, JourneyRequestQueries } from "../util/pageRequests";
+import { PageRequestParams } from "../util/requestParameters";
+import { JourneyRequestQueries } from "../util/requestQueries";
 
 
 /**
